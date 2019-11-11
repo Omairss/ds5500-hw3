@@ -1,30 +1,6 @@
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-```
-
-
-```python
-fiscal_df = pd.read_csv('data/Sdf16_1a.txt', sep = '\t')
-rla_df = pd.read_csv('data/rla-achievement-lea-sy2015-16.csv', sep = ',')
-math_df = pd.read_csv('data/math-achievement-lea-sy2015-16.csv', sep = ',')
-```
-
-    /usr/local/lib/python3.5/dist-packages/IPython/core/interactiveshell.py:3058: DtypeWarning: Columns (0,3) have mixed types. Specify dtype option on import or set low_memory=False.
-      interactivity=interactivity, compiler=compiler, result=result)
-    /usr/local/lib/python3.5/dist-packages/IPython/core/interactiveshell.py:3058: DtypeWarning: Columns (17,45,129,143) have mixed types. Specify dtype option on import or set low_memory=False.
-      interactivity=interactivity, compiler=compiler, result=result)
-    /usr/local/lib/python3.5/dist-packages/IPython/core/interactiveshell.py:3058: DtypeWarning: Columns (17) have mixed types. Specify dtype option on import or set low_memory=False.
-      interactivity=interactivity, compiler=compiler, result=result)
-
-
 ### Problem 1
 
-
-```python
-fiscal_df
-```
+Following is the district-level fiscal data from 2015-16. 
 
 
 
@@ -342,30 +318,13 @@ fiscal_df
 
 
 
-#### It seems like the federal funding revenue follows a pwer log distribution.
+#### It seems like the federal funding (revenue) follows a power log distribution, with a few schools recieving most of the federal fundings.
 
-
-```python
-fiscal_df[fiscal_df['TFEDREV'] > 0]['TFEDREV'].hist(bins = 100, log = True)
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f5915c97908>
 
 
 
 
 ![png](output_5_1.png)
-
-
-
-```python
-fiscal_df[['TFEDREV','STNAME']].groupby('STNAME').sum().rename(columns = {'TFEDREV': 'Revenue'})\
-                .sort_values('Revenue', ascending = False)
-```
-
 
 
 
@@ -623,25 +582,6 @@ fiscal_df[['TFEDREV','STNAME']].groupby('STNAME').sum().rename(columns = {'TFEDR
 
 
 
-```python
-
-```
-
-
-```python
-fiscal_df_per_captita = fiscal_df[["STNAME", "TOTALEXP", "V33"]].groupby(['STNAME']).sum()
-
-plt.figure()
-(fiscal_df_per_captita['TOTALEXP']/fiscal_df_per_captita['V33']).rename_axis('State')\
-    .sort_values(ascending = False).plot.bar(figsize = (15,10))
-plt.ylabel('Federal Funding Per Student')
-```
-
-
-
-
-    Text(0, 0.5, 'Federal Funding Per Student')
-
 
 
 
@@ -649,12 +589,6 @@ plt.ylabel('Federal Funding Per Student')
 
 
 ### Problem 2
-
-
-```python
-fiscal_df
-```
-
 
 
 
@@ -971,60 +905,17 @@ fiscal_df
 
 
 
-
-```python
-exp_rev_df = fiscal_df[['TOTALEXP','STNAME', 'TOTALREV']].rename(columns = {'TOTALEXP': 'Total Expenditure', 'TOTALREV': 'Total Revenue'}).rename_axis('State')
-```
-
-
-```python
-exp_rev_df.plot.scatter('Total Expenditure', 'Total Revenue')
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f5910be3128>
-
-
-
-
 ![png](output_13_1.png)
 
 
 ### There is a clean linear relationships between revenue and expenditures, as expected.
 
 
-```python
-fiscal_df_per_captita = fiscal_df[["STNAME", "_41F", "_66V"]].groupby(['STNAME']).sum()
-
-plt.figure()
-(fiscal_df_per_captita['_41F']+fiscal_df_per_captita['_66V']).rename_axis('State')\
-    .sort_values(ascending = False).plot.bar(figsize = (15,10))
-plt.ylabel('Debt per student')
-```
-
-
-
-
-    Text(0, 0.5, 'Debt per student')
-
-
 
 
 ![png](output_15_1.png)
 
-
-
-```python
-fiscal_math_df = pd.merge(fiscal_df, math_df)
-```
-
-
-```python
-math_df['ALL_MTH00PCTPROF_1516'].unique()
-```
-
+The following are the unique values from the table. Most non-numeric values are of the form x-y GEx or LEx
 
 
 
@@ -1202,14 +1093,13 @@ tocut_df['to_cut'].plot.hist(bins = 100)
     <matplotlib.axes._subplots.AxesSubplot at 0x7f58fb3e4240>
 
 
+## Problem 5
+In order to effectively cut the budget in a way that's least damaging to the schools alraedy struggling, the method I used is as follows:
+
+1. Take the sum total of the amount to be cut.
+2. Sort the districts by the funding recieved in decreasing order.
+3. Remove 20% from the top n, till the budget cut is satisfied.
 
 
+This is a methiod that saves 15,000 districts from budget cuts while only marginally increasing the cuts for the best performing schools and is in my opinion the best way to cut the budget with minimal damage.
 ![png](output_32_1.png)
-
-
-
-
-
-```python
-
-```
