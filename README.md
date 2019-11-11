@@ -1044,7 +1044,7 @@ kl_divergence(np.random.uniform(0,100,4955),
 
 
 
-### KL divergence as we can see is about twice as good as a random distribution
+#### KL divergence as we can see is about twice as good as a random distribution when compared to the original unmodified distribution and should be a decent method of imputation.
 
 ## Problem 4
 
