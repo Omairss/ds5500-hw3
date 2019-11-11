@@ -6,19 +6,7 @@ Following is the district-level fiscal data from 2015-16.
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -329,19 +317,7 @@ Following is the district-level fiscal data from 2015-16.
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -565,14 +541,6 @@ Following is the district-level fiscal data from 2015-16.
 
 
 
-```python
-fiscal_df[['TFEDREV','STNAME']].groupby('STNAME').sum().rename(columns = {'TFEDREV': 'Revenue'}).rename_axis('State')\
-                .sort_values('Revenue', ascending = False).plot.bar(figsize = (15,10))
-```
-
-
-
-
     <matplotlib.axes._subplots.AxesSubplot at 0x7f5915655588>
 
 
@@ -593,19 +561,7 @@ fiscal_df[['TFEDREV','STNAME']].groupby('STNAME').sum().rename(columns = {'TFEDR
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -915,7 +871,16 @@ fiscal_df[['TFEDREV','STNAME']].groupby('STNAME').sum().rename(columns = {'TFEDR
 
 ![png](output_15_1.png)
 
-The following are the unique values from the table. Most non-numeric values are of the form x-y GEx or LEx
+The following are the unique values from the table. Most non-numeric values are of the form x-y GEx or LEx.
+
+In order to convert this to a numeric value the following steps were performed.
+
+1. Range values: Mean of the range was taken
+2. GEx: Mean of x and 100 was taken
+3. LEx: Mean of x and 0 was taken (Essentially x/2)
+4. Null/Missing: Replaced by a positive normal distribution with the mean and sigma of the original distribution.
+
+Finally, KL Divergence of the Original distribution vs the imputed distribution was compared to KL Divergence of the Original distribution and random normal distribution. 
 
 
 
